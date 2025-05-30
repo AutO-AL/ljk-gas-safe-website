@@ -1,35 +1,35 @@
+// Utility Function: Toggle Class
+function toggleClass(element, className) {
+    if (element) {
+        element.classList.toggle(className);
+    }
+}
+
 // Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileNav = document.getElementById('mobileNav');
-    
+
     if (mobileMenuBtn && mobileNav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            mobileNav.classList.toggle('active');
-            
-            // Change button icon
-            if (mobileNav.classList.contains('active')) {
-                mobileMenuBtn.textContent = '✕'; // Close icon
-                mobileMenuBtn.setAttribute('aria-expanded', 'true');
-            } else {
-                mobileMenuBtn.textContent = '☰'; // Menu icon
+        mobileMenuBtn.addEventListener('click', function () {
+            toggleClass(mobileNav, 'active');
+            const isExpanded = mobileNav.classList.contains('active');
+            mobileMenuBtn.textContent = isExpanded ? '✕' : '☰';
+            mobileMenuBtn.setAttribute('aria-expanded', isExpanded.toString());
+        });
+
+        // Event Delegation for Mobile Nav Links
+        mobileNav.addEventListener('click', function (event) {
+            if (event.target.classList.contains('mobile-nav-link')) {
+                mobileNav.classList.remove('active');
+                mobileMenuBtn.textContent = '☰';
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
             }
         });
 
-        // Close mobile menu when clicking on a link
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                mobileNav.classList.remove('active');
-                mobileMenuBtn.textContent = '☰';
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (mobileNav && mobileNav.classList.contains('active') && !mobileMenuBtn.contains(event.target) && !mobileNav.contains(event.target)) {
+        // Close Mobile Menu on Outside Click
+        document.addEventListener('click', function (event) {
+            if (!mobileNav.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
                 mobileNav.classList.remove('active');
                 mobileMenuBtn.textContent = '☰';
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
@@ -121,90 +121,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // REMOVED: Obsolete Privacy Policy Link Click Handler, as privacy_policy.html now exists.
 
-// Notification System
+// Notification System: Support Multiple Notifications
 function showNotification(message, type = 'info') {
-    // Remove existing notifications to prevent stacking
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => {
-        notification.remove();
-    });
-    
-    // Create notification element
+    const notificationId = `notification-${Date.now()}`;
     const notification = document.createElement('div');
+    notification.id = notificationId;
     notification.className = `notification notification--${type}`;
-    notification.setAttribute('role', 'alert'); // For accessibility
+    notification.setAttribute('role', 'alert');
     notification.innerHTML = `
         <div class="notification-content">
             <span class="notification-message">${message}</span>
-            <button class="notification-close" aria-label="Close notification" onclick="this.parentElement.parentElement.remove()">✕</button>
+            <button class="notification-close" aria-label="Close notification" onclick="document.getElementById('${notificationId}').remove()">✕</button>
         </div>
     `;
-    
-    // Add notification styles (inline for simplicity, consider moving to CSS file)
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'error' ? '#DC2626' : type === 'success' ? '#059669' : '#1B3A4B'}; /* Theme colors */
-        color: white;
-        padding: 16px 20px;
-        border-radius: 8px; /* Consistent with site's border-radius */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
-        z-index: 2000; /* High z-index */
-        max-width: 400px;
-        animation: slideInRight 0.3s ease-out;
-        font-family: var(--font-family-base); /* Use site font */
-    `;
-    
-    // Add CSS animation if not already present
-    if (!document.querySelector('#notification-animation-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-animation-styles';
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            .notification-content {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-            }
-            .notification-close {
-                background: none;
-                border: none;
-                color: white;
-                cursor: pointer;
-                font-size: 18px; /* Slightly larger */
-                padding: 0;
-                width: 24px; /* Slightly larger touch target */
-                height: 24px; /* Slightly larger touch target */
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-            }
-            .notification-close:hover {
-                opacity: 0.8;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    // Add to page
     document.body.appendChild(notification);
-    
-    // Auto-remove after 7 seconds (longer for readability)
+
     setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
+        const element = document.getElementById(notificationId);
+        if (element) {
+            element.remove();
         }
     }, 7000);
 }
