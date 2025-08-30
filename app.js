@@ -51,8 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (targetElement) {
                     e.preventDefault(); // Prevent default only if target is found for smooth scroll
-                    // Calculate offset for sticky headers
-                    const headerOffset = 80; // Adjust based on combined height of sticky emergency banner and header
+                    
+                    // Dynamically calculate the offset for sticky headers
+                    const header = document.querySelector('header');
+                    const emergencyBanner = document.querySelector('.emergency-banner');
+                    let headerOffset = 0;
+                    if (header) {
+                        headerOffset += header.offsetHeight;
+                    }
+                    if (emergencyBanner) {
+                        headerOffset += emergencyBanner.offsetHeight;
+                    }
+
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -231,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const sections = document.querySelectorAll('section[id]'); // Sections to track for highlighting
     const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link'); // All main navigation links
-    
+
     function highlightCurrentSection() {
         let currentSectionId = '';
         const headerOffset = 100; // Offset for sticky header height
@@ -243,34 +253,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentSectionId = section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
+            link.classList.remove('highlighted');
             // Check if the link's href matches the current section ID (e.g., href="#about" for section id="about")
             if (link.getAttribute('href') === `#${currentSectionId}`) {
-                link.classList.add('active');
+                if (currentSectionId === 'services') {
+                    link.classList.add('highlighted');
+                } else {
+                    link.classList.add('active');
+                }
             }
         });
     }
-    
+
     // Only run scroll-based highlighting on pages that have the sections (typically index.html)
     const isIndexPage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
     if (sections.length > 0 && isIndexPage) {
-        // Add CSS for active state if not already present
-        if (!document.querySelector('#nav-active-styles')) {
-            const style = document.createElement('style');
-            style.id = 'nav-active-styles';
-            style.textContent = `
-                .nav-link.active,
-                .mobile-nav-link.active {
-                    background: rgba(255, 215, 0, 0.2) !important; /* Gold highlight */
-                    color: #FFD700 !important; /* Gold text */
-                    font-weight: var(--font-weight-bold); /* Make active link bolder */
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
         // Initial highlight check
         highlightCurrentSection();
         // Highlight on scroll
@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // as they generally point to homepage sections.
         navLinks.forEach(link => {
             link.classList.remove('active');
+            link.classList.remove('highlighted');
             // If a specific link should be active on a non-index page (e.g., a "Privacy" link in nav), handle it here.
             // For this site, the main nav doesn't have a direct "Privacy Policy" link.
         });
