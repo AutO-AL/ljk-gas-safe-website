@@ -809,7 +809,7 @@ select.form-control {
 
   .header {
     /* Adjust sticky top position for the taller mobile banner */
-    top: 78px;
+    top: 76px;
   }
 }
 
