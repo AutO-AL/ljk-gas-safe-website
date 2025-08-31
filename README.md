@@ -22,21 +22,6 @@ The LJK Gas Safe website includes the following key sections and functionalities
 *   **CSS3:** For styling and layout, including responsive design.
 *   **JavaScript:** For interactive elements and dynamic content.
 
-## Setup and Local Development
-
-To get a local copy up and running, follow these simple steps:
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/ljk-gas-safe-website.git
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd ljk-gas-safe-website
-    ```
-3.  **Open `index.html` in your web browser:**
-    Simply double-click the `index.html` file, or open it via your browser's file menu.
-
 ## Usage
 The website is designed to be intuitive and easy to navigate. Users can browse through different sections using the navigation menu. The contact form allows for direct inquiries.
 
