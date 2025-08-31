@@ -2,11 +2,11 @@
   /* Colors */
   --color-background: rgba(252, 252, 249, 1);
   --color-surface: rgba(255, 255, 253, 1);
-  --color-text: rgba(19, 52, 59, 1);
-  --color-text-secondary: rgba(55, 65, 81, 1);
-  --color-primary: rgba(29, 116, 128, 1);
-  --color-primary-hover: rgba(26, 104, 115, 1);
-  --color-primary-active: rgba(23, 92, 102, 1);
+  --color-text: white;
+  --color-text-secondary: #D3D3D3;
+  --color-primary: #0000FF;
+  --color-primary-hover: yellow;
+  --color-primary-active: yellow;
   --color-secondary: rgba(229, 231, 235, 1);
   --color-secondary-hover: rgba(209, 213, 219, 1);
   --color-secondary-active: rgba(187, 193, 201, 1);
@@ -105,11 +105,11 @@
   :root {
     --color-background: rgba(18, 18, 18, 1);
     --color-surface: rgba(31, 31, 31, 1);
-    --color-text: rgba(255, 255, 255, 0.87);
-    --color-text-secondary: rgba(255, 255, 255, 0.6);
-    --color-primary: rgba(187, 134, 252, 1);
-    --color-primary-hover: rgba(207, 154, 252, 1);
-    --color-primary-active: rgba(227, 174, 252, 1);
+    --color-text: white;
+    --color-text-secondary: #D3D3D3;
+    --color-primary: #0000FF;
+    --color-primary-hover: yellow;
+    --color-primary-active: yellow;
     --color-secondary: rgba(255, 255, 255, 0.12);
     --color-secondary-hover: rgba(255, 255, 255, 0.2);
     --color-secondary-active: rgba(255, 255, 255, 0.25);
@@ -220,6 +220,7 @@ html {
 body {
   margin: 0;
   padding: 0;
+  background-color: #36454F;
 }
 
 *,
@@ -648,7 +649,7 @@ select.form-control {
 
 /* Emergency Banner */
 .emergency-banner {
-  background: #DC2626;
+  background: #0000FF;
   color: white;
   padding: var(--space-8) 0;
   text-align: center;
@@ -679,8 +680,8 @@ select.form-control {
 }
 
 .emergency-phone:hover {
-  background: white;
-  color: #DC2626;
+  background: yellow;
+  color: #0000FF;
 }
 
 @media (max-width: 768px) {
@@ -692,14 +693,21 @@ select.form-control {
 
 /* Header */
 .header {
-  background: #1B3A4B;
+  background: #36454F;
   color: white;
-  padding: var(--space-16) 0;
+  /* This is the initial padding when at the top of the page */
+  padding: var(--space-8) 0;
   position: sticky;
-  top: 40px;
+  top: 49px; /* Adjusted to match the desktop banner height and remove the gap */
   z-index: 99;
+  /* Add a transition for a smooth padding change */
+  transition: padding var(--duration-normal) var(--ease-standard);
 }
 
+.header--scrolled {
+  /* This class is added via JavaScript to increase padding on scroll */
+  padding: var(--space-16) 0;
+}
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -720,8 +728,8 @@ select.form-control {
 }
 
 .gas-safe-badge {
-  background: #FFD700;
-  color: #1B3A4B;
+  background: yellow;
+  color: #36454F;
   padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-base);
   font-size: var(--font-size-sm);
@@ -744,7 +752,11 @@ select.form-control {
 
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: white;
+  color: yellow;
+}
+
+.nav-link.active {
+  color: yellow;
 }
 
 .mobile-menu-btn {
@@ -775,7 +787,11 @@ select.form-control {
 
 .mobile-nav-link:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: white;
+  color: yellow;
+}
+
+.mobile-nav-link.active {
+  color: yellow;
 }
 
 @media (max-width: 768px) {
@@ -790,11 +806,16 @@ select.form-control {
   .mobile-nav.active {
     display: flex;
   }
+
+  .header {
+    /* Adjust sticky top position for the taller mobile banner */
+    top: 78px;
+  }
 }
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, #1B3A4B 0%, #4A5568 100%);
+  background: #36454F;
   color: white;
   padding: var(--space-32) 0;
   text-align: center;
@@ -863,7 +884,7 @@ select.form-control {
 .section-title {
   text-align: center;
   font-size: var(--font-size-3xl);
-  color: #1B3A4B;
+  color: white;
   margin-bottom: var(--space-32);
 }
 
@@ -900,12 +921,12 @@ select.form-control {
 }
 
 .service-card h3 {
-  color: #1B3A4B;
+  color: white;
   margin-bottom: var(--space-12);
 }
 
 .service-card p {
-  color: #4A5568;
+  color: #D3D3D3;
   margin: 0;
 }
 
@@ -920,15 +941,21 @@ select.form-control {
   margin: 0 auto;
 }
 
+@media (min-width: 768px) {
+  .about-content {
+    max-width: 800px;
+  }
+}
+
 .about-text p {
-  color: #4A5568;
+  color: #D3D3D3;
   font-size: var(--font-size-lg);
   line-height: var(--line-height-normal);
   margin-bottom: var(--space-16);
 }
 
 .qualifications {
-  background: #1B3A4B;
+  background: #36454F;
   color: white;
   padding: var(--space-24);
   border-radius: var(--radius-lg);
@@ -936,7 +963,7 @@ select.form-control {
 }
 
 .qualifications h3 {
-  color: white;
+  color: yellow;
   margin-bottom: var(--space-16);
 }
 
@@ -949,6 +976,7 @@ select.form-control {
 .qualifications li {
   padding: var(--space-8) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #D3D3D3;
 }
 
 .qualifications li:last-child {
@@ -1002,7 +1030,7 @@ select.form-control {
 }
 
 .gallery-item h3 {
-  color: #1B3A4B;
+  color: white;
   margin: 0;
 }
 
@@ -1014,7 +1042,7 @@ select.form-control {
 }
 
 .gallery-project h2 {
-  color: #1B3A4B;
+  color: white;
   text-align: center;
   margin-bottom: var(--space-24);
 }
@@ -1025,7 +1053,7 @@ select.form-control {
   border-radius: var(--radius-lg);
   padding: var(--space-32);
   text-align: center;
-  color: #4A5568;
+  color: #D3D3D3;
   font-style: italic;
 }
 
@@ -1051,13 +1079,13 @@ select.form-control {
 }
 
 .contact-card h3 {
-  color: #1B3A4B;
+  color: white;
   margin-bottom: var(--space-16);
 }
 
 .contact-info p {
   margin-bottom: var(--space-8);
-  color: #4A5568;
+  color: #D3D3D3;
 }
 
 .service-areas {
@@ -1067,12 +1095,12 @@ select.form-control {
 }
 
 .service-areas h4 {
-  color: #1B3A4B;
+  color: white;
   margin-bottom: var(--space-8);
 }
 
 .service-areas p {
-  color: #4A5568;
+  color: #D3D3D3;
   margin: 0;
 }
 
@@ -1084,7 +1112,7 @@ select.form-control {
 }
 
 .contact-form-section h3 {
-  color: #1B3A4B;
+  color: white;
   margin-bottom: var(--space-16);
 }
 
@@ -1097,7 +1125,7 @@ select.form-control {
 
 /* Footer */
 .footer {
-  background: #1B3A4B;
+  background: #36454F;
   color: white;
   padding: var(--space-32) 0 var(--space-16) 0;
 }
@@ -1115,7 +1143,7 @@ select.form-control {
 }
 
 .footer-section p {
-  color: rgba(255, 255, 255, 0.8);
+  color: #D3D3D3;
   margin-bottom: var(--space-8);
 }
 
@@ -1123,40 +1151,43 @@ select.form-control {
   text-align: center;
   padding-top: var(--space-16);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  color: #D3D3D3;
 }
 
 .footer-bottom a {
-  color: #FFD700;
+  color: yellow;
   text-decoration: none;
 }
 
 .footer-bottom a:hover {
   text-decoration: underline;
+  color: yellow;
 }
 
 /* Custom Button Overrides for Brand Colors */
 .btn--primary {
-  background: #DC2626;
+  background: #0000FF;
   color: white;
 }
 
 .btn--primary:hover {
-  background: #B91C1C;
+  background: yellow;
+  color: #0000FF;
 }
 
 .btn--primary:active {
-  background: #991B1B;
+  background: yellow;
+  color: #0000FF;
 }
 
 .btn--outline {
-  border-color: #1B3A4B;
-  color: #1B3A4B;
+  border-color: white;
+  color: white;
 }
 
 .btn--outline:hover {
-  background: #1B3A4B;
-  color: white;
+  background: yellow;
+  color: #36454F;
 }
 
 /* Smooth Scrolling */
