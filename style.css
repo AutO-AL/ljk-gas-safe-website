@@ -966,6 +966,12 @@ select.form-control {
   background: var(--color-background);
 }
 
+/* Testimonials Section */
+.testimonials {
+  padding: var(--space-32) 0;
+  background: var(--color-surface);
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
