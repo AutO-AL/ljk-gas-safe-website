@@ -397,7 +397,7 @@ pre code {
 }
 
 textarea.form-control {
-  font-family: var(--font-family-base);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-base);
 }
 
@@ -1312,4 +1312,10 @@ html {
     font-weight: var(--font-weight-bold);
     color: var(--color-warning);
     font-size: var(--font-size-lg);
+}
+.social-icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 5px; /* Add some space between the icon and any potential text */
 }
