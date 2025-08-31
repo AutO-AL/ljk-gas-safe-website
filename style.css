@@ -755,8 +755,11 @@ select.form-control {
   color: yellow;
 }
 
-.nav-link.active {
+.nav-link.active,
+.nav-link.highlighted {
   color: yellow;
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
 }
 
 .mobile-menu-btn {
@@ -790,8 +793,11 @@ select.form-control {
   color: yellow;
 }
 
-.mobile-nav-link.active {
+.mobile-nav-link.active,
+.mobile-nav-link.highlighted {
   color: yellow;
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
@@ -1196,9 +1202,12 @@ html {
 }
 
 /* Focus States for Better Accessibility */
-.nav-link:focus,
-.mobile-nav-link:focus,
-.gallery-item:focus {
+.nav-link:focus-visible,
+.mobile-nav-link:focus-visible {
+  box-shadow: 0 0 0 2px #FFD700;
+}
+
+.gallery-item:focus-visible {
   outline: 2px solid #FFD700;
   outline-offset: 2px;
 }

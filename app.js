@@ -239,50 +239,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Active Navigation Highlighting (Conditional based on page)
 document.addEventListener('DOMContentLoaded', function() {
-    const sections = document.querySelectorAll('section[id]'); // Sections to track for highlighting
-    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link'); // All main navigation links
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+
+    if (sections.length === 0 || navLinks.length === 0) {
+        return; // No sections or nav links to work with
+    }
 
     function highlightCurrentSection() {
-        let currentSectionId = '';
-        const headerOffset = 100; // Offset for sticky header height
+        // Determine the trigger point for highlighting, including a buffer
+        const header = document.querySelector('header.header');
+        const emergencyBanner = document.querySelector('.emergency-banner');
+        let triggerPoint = (header?.offsetHeight || 0) + (emergencyBanner?.offsetHeight || 0) + 15; // 15px buffer
 
-        sections.forEach(section => {
-            const sectionTop = section.getBoundingClientRect().top;
-            // Check if section is within the viewport, considering the offset
-            if (sectionTop <= headerOffset && (sectionTop + section.offsetHeight) > headerOffset) {
-                currentSectionId = section.getAttribute('id');
+        let activeSectionId = '';
+
+        // Check if user has scrolled to the bottom of the page
+        const atBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2;
+
+        if (atBottom) {
+            activeSectionId = sections[sections.length - 1].getAttribute('id');
+        } else {
+            // Find the last section that has scrolled past the trigger point
+            const passedSections = [...sections].filter(section => section.getBoundingClientRect().top <= triggerPoint);
+            if (passedSections.length > 0) {
+                activeSectionId = passedSections[passedSections.length - 1].getAttribute('id');
             }
-        });
+        }
 
+        // Apply the 'active'/'highlighted' class
         navLinks.forEach(link => {
-            link.classList.remove('active');
-            link.classList.remove('highlighted');
-            // Check if the link's href matches the current section ID (e.g., href="#about" for section id="about")
-            if (link.getAttribute('href') === `#${currentSectionId}`) {
-                if (currentSectionId === 'services') {
-                    link.classList.add('highlighted');
-                } else {
-                    link.classList.add('active');
-                }
-            }
+            const isActive = link.getAttribute('href') === `#${activeSectionId}`;
+            link.classList.toggle('active', isActive && activeSectionId !== 'services');
+            link.classList.toggle('highlighted', isActive && activeSectionId === 'services');
         });
     }
 
-    // Only run scroll-based highlighting on pages that have the sections (typically index.html)
+    // Only run scroll-based highlighting on the main page
     const isIndexPage = window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname === '';
-    if (sections.length > 0 && isIndexPage) {
-        // Initial highlight check
+    if (isIndexPage) {
+        // Use a throttled scroll handler for performance
+        let scrollTimeout;
+        const throttledHighlight = () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    highlightCurrentSection();
+                    scrollTimeout = null;
+                }, 100); // Throttle to run at most every 100ms
+            }
+        };
+        
+        window.addEventListener('scroll', throttledHighlight);
+        // Initial check on load
         highlightCurrentSection();
-        // Highlight on scroll
-        window.addEventListener('scroll', highlightCurrentSection);
     } else {
-        // On other pages (e.g., privacy policy), remove any 'active' class from main nav links
-        // as they generally point to homepage sections.
+        // On other pages, remove any active classes
         navLinks.forEach(link => {
-            link.classList.remove('active');
-            link.classList.remove('highlighted');
-            // If a specific link should be active on a non-index page (e.g., a "Privacy" link in nav), handle it here.
-            // For this site, the main nav doesn't have a direct "Privacy Policy" link.
+            link.classList.remove('active', 'highlighted');
         });
     }
 });
