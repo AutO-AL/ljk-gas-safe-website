@@ -155,8 +155,8 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'error' ? '#DC2626' : type === 'success' ? '#059669' : '#1B3A4B'}; /* Theme colors */
-        color: white;
+        background: ${type === 'error' ? 'var(--color-error)' : type === 'success' ? 'var(--color-success)' : 'var(--brand-navy)'}; /* Theme colors */
+        color: var(--brand-text-on-dark);
         padding: 16px 20px;
         border-radius: 8px; /* Consistent with site's border-radius */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow */
@@ -393,8 +393,8 @@ document.addEventListener('DOMContentLoaded', function() {
             position: absolute;
             top: -100px; /* Visually hidden off-screen */
             left: 6px;
-            background: #1B3A4B; /* Dark blue, consistent with header */
-            color: white;
+            background: var(--brand-navy); /* Consistent with header */
+            color: var(--brand-text-on-dark);
             padding: 10px 15px; /* Generous padding */
             text-decoration: none;
             z-index: 3000; /* Highest z-index */
