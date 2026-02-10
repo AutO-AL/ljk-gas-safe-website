@@ -113,6 +113,8 @@
   --container-md: 768px;
   --container-lg: 1024px;
   --container-xl: 1280px;
+  --banner-height: 49px;
+  --header-height: 68px;
 }
 
 /* Dark mode colors */
@@ -278,6 +280,21 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-background);
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--banner-height) + var(--header-height) + var(--space-16));
 }
 
 *,
@@ -746,9 +763,22 @@ select.form-control {
 }
 
 @media (max-width: 768px) {
+  .emergency-banner {
+    padding: var(--space-6) 0;
+  }
+
   .emergency-content {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: var(--space-8);
+  }
+
+  .emergency-text {
+    font-size: var(--font-size-sm);
+  }
+
+  .emergency-phone {
+    width: min(100%, 320px);
+    text-align: center;
   }
 }
 
@@ -759,7 +789,7 @@ select.form-control {
   /* This is the initial padding when at the top of the page */
   padding: var(--space-8) 0;
   position: sticky;
-  top: 49px; /* Adjusted to match the desktop banner height and remove the gap */
+  top: var(--banner-height);
   z-index: 99;
   border-bottom: 1px solid rgba(246, 198, 91, 0.28);
   box-shadow: 0 10px 24px rgba(11, 36, 53, 0.2);
@@ -837,6 +867,7 @@ select.form-control {
   color: var(--brand-text-on-dark);
   font-size: var(--font-size-xl);
   cursor: pointer;
+  padding: 0;
 }
 
 .mobile-nav {
@@ -869,16 +900,46 @@ select.form-control {
   }
   
   .mobile-menu-btn {
-    display: block;
+    display: flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-base);
+    background: rgba(255, 255, 255, 0.08);
   }
   
   .mobile-nav.active {
     display: flex;
   }
 
-  .header {
-    /* Adjust sticky top position for the taller mobile banner */
-    top: 76px;
+  .header-content {
+    gap: var(--space-12);
+  }
+
+  .logo {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+
+  .gas-safe-badge {
+    font-size: var(--font-size-xs);
+    line-height: 1.35;
+  }
+
+  .mobile-nav {
+    margin-top: var(--space-12);
+    padding: var(--space-12);
+    border: 1px solid rgba(244, 248, 251, 0.26);
+    border-radius: var(--radius-md);
+    background: rgba(11, 36, 53, 0.32);
+    backdrop-filter: blur(4px);
+  }
+
+  .mobile-nav-link {
+    min-height: 44px;
+    padding: var(--space-10) var(--space-12);
+    align-items: center;
+    display: flex;
   }
 }
 
@@ -953,17 +1014,35 @@ select.form-control {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding: var(--space-24) 0;
+  }
+
   .hero-title {
     font-size: var(--font-size-3xl);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-24);
   }
   
   .trust-markers {
     gap: var(--space-16);
+    margin-bottom: var(--space-24);
   }
   
   .hero-actions {
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    gap: var(--space-12);
+  }
+
+  .hero-actions .btn {
+    width: min(100%, 360px);
+    min-height: 46px;
+    padding: var(--space-10) var(--space-16);
   }
 }
 
@@ -1088,6 +1167,12 @@ select.form-control {
 .testimonials {
   padding: var(--space-32) 0;
   background: var(--brand-surface-tint);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-24);
 }
 
 .gallery-grid {
@@ -1306,14 +1391,92 @@ html {
   outline-offset: 2px;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--space-12);
+    padding-right: var(--space-12);
+  }
+
+  .services,
+  .about,
+  .gallery,
+  .testimonials,
+  .gallery-project,
+  .contact {
+    padding: var(--space-24) 0;
+  }
+
+  .footer {
+    padding-top: var(--space-24);
+  }
+
+  .section-title {
+    font-size: clamp(26px, 5.5vw, 32px);
+    margin-bottom: var(--space-24);
+  }
+
+  .services-grid,
+  .gallery-grid,
+  .testimonials-grid,
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
+  }
+
+  .service-card,
+  .gallery-item,
+  .contact-card,
+  .contact-form-section,
+  .project-placeholder,
+  .qualifications {
+    padding: var(--space-20);
+  }
+
+  .about-text p {
+    font-size: var(--font-size-base);
+  }
+
+  .form-control,
+  select.form-control,
+  textarea.form-control {
+    font-size: 16px;
+  }
+
+  .footer-content {
+    margin-bottom: var(--space-16);
+  }
+}
+
 /* Additional responsive adjustments */
 @media (max-width: 480px) {
+  .container {
+    padding-left: var(--space-10);
+    padding-right: var(--space-10);
+  }
+
+  .emergency-text {
+    font-size: var(--font-size-sm);
+    text-align: center;
+  }
+
+  .logo {
+    font-size: var(--font-size-2xl);
+  }
+
   .hero-title {
     font-size: var(--font-size-2xl);
   }
   
   .section-title {
     font-size: var(--font-size-2xl);
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .trust-item {
+    width: 100%;
   }
   
   .services-grid,
@@ -1322,20 +1485,13 @@ html {
     grid-template-columns: 1fr;
   }
 
-  .testimonial-card-v2 .card-content {
-      gap: var(--space-12);
-  }
-
-  .testimonial-card-v2 .avatar-placeholder {
-      width: 40px;
-      height: 40px;
-      font-size: var(--font-size-xl);
-  }
-
-  .testimonial-card-v2 .card-footer {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space-8);
+  .service-card,
+  .gallery-item,
+  .contact-card,
+  .contact-form-section,
+  .project-placeholder,
+  .qualifications {
+    padding: var(--space-16);
   }
 }
 
@@ -1411,4 +1567,33 @@ html {
   height: 24px;
   vertical-align: middle;
   margin-right: 5px; /* Add some space between the icon and any potential text */
+}
+
+/* Keep testimonial mobile overrides after base testimonial styles */
+@media (max-width: 768px) {
+  .testimonial-card-v2 {
+    padding: var(--space-20);
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-card-v2 {
+    padding: var(--space-16);
+  }
+
+  .testimonial-card-v2 .card-content {
+    gap: var(--space-12);
+  }
+
+  .testimonial-card-v2 .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-xl);
+  }
+
+  .testimonial-card-v2 .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
 }

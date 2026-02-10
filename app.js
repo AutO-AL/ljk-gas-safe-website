@@ -1,20 +1,45 @@
+function syncStickyLayoutVars() {
+    const root = document.documentElement;
+    const emergencyBanner = document.querySelector('.emergency-banner');
+    const header = document.querySelector('.header');
+
+    if (emergencyBanner) {
+        root.style.setProperty('--banner-height', `${Math.ceil(emergencyBanner.offsetHeight)}px`);
+    }
+
+    if (header) {
+        root.style.setProperty('--header-height', `${Math.ceil(header.offsetHeight)}px`);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    syncStickyLayoutVars();
+    window.addEventListener('resize', syncStickyLayoutVars);
+    window.addEventListener('orientationchange', syncStickyLayoutVars);
+});
+
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileNav = document.getElementById('mobileNav');
     
     if (mobileMenuBtn && mobileNav) {
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+
         mobileMenuBtn.addEventListener('click', function() {
             mobileNav.classList.toggle('active');
+            const isOpen = mobileNav.classList.contains('active');
+            document.body.classList.toggle('menu-open', isOpen);
             
             // Change button icon
-            if (mobileNav.classList.contains('active')) {
+            if (isOpen) {
                 mobileMenuBtn.textContent = '✕'; // Close icon
                 mobileMenuBtn.setAttribute('aria-expanded', 'true');
             } else {
                 mobileMenuBtn.textContent = '☰'; // Menu icon
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
             }
+            syncStickyLayoutVars();
         });
 
         // Close mobile menu when clicking on a link
@@ -24,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileNav.classList.remove('active');
                 mobileMenuBtn.textContent = '☰';
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('menu-open');
+                syncStickyLayoutVars();
             });
         });
 
@@ -33,7 +60,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileNav.classList.remove('active');
                 mobileMenuBtn.textContent = '☰';
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('menu-open');
+                syncStickyLayoutVars();
             }
+        });
+
+        // Reset menu state when returning to desktop width
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                mobileMenuBtn.textContent = '☰';
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('menu-open');
+            }
+            syncStickyLayoutVars();
         });
     }
 });
