@@ -78,6 +78,179 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Gallery Project Carousels
+document.addEventListener('DOMContentLoaded', function() {
+    const carousels = document.querySelectorAll('[data-carousel]');
+
+    if (carousels.length === 0) {
+        return;
+    }
+
+    carousels.forEach((carousel) => {
+        const track = carousel.querySelector('[data-carousel-track]');
+        const slides = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
+        const prevBtn = carousel.querySelector('[data-carousel-prev]');
+        const nextBtn = carousel.querySelector('[data-carousel-next]');
+        const dotsContainer = carousel.querySelector('[data-carousel-dots]');
+
+        if (!track || slides.length === 0 || !dotsContainer) {
+            return;
+        }
+
+        dotsContainer.setAttribute('role', 'tablist');
+
+        let currentIndex = 0;
+        const autoplayDelay = 4000;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let autoplayTimer = null;
+        let isInteracting = false;
+
+        function stopAutoplay() {
+            if (autoplayTimer) {
+                window.clearInterval(autoplayTimer);
+                autoplayTimer = null;
+            }
+        }
+
+        function startAutoplay() {
+            if (prefersReducedMotion || slides.length < 2 || isInteracting) {
+                return;
+            }
+
+            stopAutoplay();
+            autoplayTimer = window.setInterval(function() {
+                goToSlide(currentIndex + 1);
+            }, autoplayDelay);
+        }
+
+        function updateDots() {
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => {
+                const isActive = index === currentIndex;
+                dot.classList.toggle('is-active', isActive);
+                dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+        }
+
+        function goToSlide(index, smooth = true) {
+            if (slides.length === 0) {
+                return;
+            }
+
+            const wrappedIndex = (index + slides.length) % slides.length;
+            currentIndex = wrappedIndex;
+
+            track.scrollTo({
+                left: slides[wrappedIndex].offsetLeft,
+                behavior: smooth ? 'smooth' : 'auto'
+            });
+
+            updateDots();
+        }
+
+        slides.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'carousel-dot';
+            dot.setAttribute('role', 'tab');
+            dot.setAttribute('aria-label', `Go to photo ${index + 1}`);
+            dot.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+            dot.addEventListener('click', function() {
+                goToSlide(index);
+                startAutoplay();
+            });
+            dotsContainer.appendChild(dot);
+        });
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                goToSlide(currentIndex - 1);
+                startAutoplay();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                goToSlide(currentIndex + 1);
+                startAutoplay();
+            });
+        }
+
+        let scrollTicking = false;
+        track.addEventListener('scroll', function() {
+            if (scrollTicking) {
+                return;
+            }
+
+            scrollTicking = true;
+            window.requestAnimationFrame(function() {
+                let nearestIndex = currentIndex;
+                let nearestDistance = Number.POSITIVE_INFINITY;
+                const scrollLeft = track.scrollLeft;
+
+                slides.forEach((slide, index) => {
+                    const distance = Math.abs(slide.offsetLeft - scrollLeft);
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestIndex = index;
+                    }
+                });
+
+                if (nearestIndex !== currentIndex) {
+                    currentIndex = nearestIndex;
+                    updateDots();
+                }
+                scrollTicking = false;
+            });
+        }, { passive: true });
+
+        window.addEventListener('resize', function() {
+            goToSlide(currentIndex, false);
+        });
+
+        carousel.addEventListener('mouseenter', function() {
+            isInteracting = true;
+            stopAutoplay();
+        });
+
+        carousel.addEventListener('mouseleave', function() {
+            isInteracting = false;
+            startAutoplay();
+        });
+
+        carousel.addEventListener('focusin', function() {
+            isInteracting = true;
+            stopAutoplay();
+        });
+
+        carousel.addEventListener('focusout', function(event) {
+            if (!carousel.contains(event.relatedTarget)) {
+                isInteracting = false;
+                startAutoplay();
+            }
+        });
+
+        carousel.addEventListener('touchstart', function() {
+            isInteracting = true;
+            stopAutoplay();
+        }, { passive: true });
+
+        carousel.addEventListener('touchend', function() {
+            isInteracting = false;
+            startAutoplay();
+        }, { passive: true });
+
+        carousel.addEventListener('touchcancel', function() {
+            isInteracting = false;
+            startAutoplay();
+        }, { passive: true });
+
+        // Initialize and ensure each carousel starts on the first image.
+        goToSlide(0, false);
+        startAutoplay();
+    });
+});
+
 // Smooth Scrolling for Navigation Links (for same-page anchors)
 document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('a[href^="#"]'); // Targets same-page links
